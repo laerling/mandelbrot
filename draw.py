@@ -30,6 +30,12 @@ class UserAction(Enum):
     JULIA = 1
     RESET = 2
     PAUSE = 3
+    ZOOM_IN = 4
+    ZOOM_OUT = 5
+    MOVE_UP = 6
+    MOVE_DOWN = 7
+    MOVE_LEFT = 8
+    MOVE_RIGHT = 9
 
 def getUserAction():
     "Return pygame events if they are valid user actions"
@@ -50,6 +56,18 @@ def getUserAction():
                 return UserAction.JULIA
             elif e.key == pygame.K_r:
                 return UserAction.RESET
+            elif e.key == pygame.K_PLUS:
+                return UserAction.ZOOM_IN
+            elif e.key == pygame.K_MINUS:
+                return UserAction.ZOOM_OUT
+            elif e.key == pygame.K_UP:
+                return UserAction.MOVE_UP
+            elif e.key == pygame.K_DOWN:
+                return UserAction.MOVE_DOWN
+            elif e.key == pygame.K_LEFT:
+                return UserAction.MOVE_LEFT
+            elif e.key == pygame.K_RIGHT:
+                return UserAction.MOVE_RIGHT
     return None
 
 def pixel(pos, color=black, update_display=True):

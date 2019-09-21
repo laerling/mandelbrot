@@ -33,6 +33,25 @@ class Frame:
     def middle_y(self):
         return min(self.y) + self.size_y() / 2
 
+    def zoom(self, factor=2, point=None):
+        if point == None:
+            point = (self.middle_x(), self.middle_y())
+        new_size_x = self.size_x() / factor
+        new_size_y = self.size_y() / factor
+        self.x = (point[0] - new_size_x / 2, point[0] + new_size_x / 2)
+        self.y = (point[1] - new_size_y / 2, point[1] + new_size_y / 2)
+
+    def move(self, user_action=None, factor=0.25):
+        size_x = self.size_x()
+        size_y = self.size_y()
+        if user_action == draw.UserAction.MOVE_UP:
+            self.y = (min(self.y) - size_y * factor, max(self.y) - size_y * factor)
+        elif user_action == draw.UserAction.MOVE_DOWN:
+            self.y = (min(self.y) + size_y * factor, max(self.y) + size_y * factor)
+        elif user_action == draw.UserAction.MOVE_LEFT:
+            self.x = (min(self.x) - size_x * factor, max(self.x) - size_x * factor)
+        elif user_action == draw.UserAction.MOVE_RIGHT:
+            self.x = (min(self.x) + size_x * factor, max(self.x) + size_x * factor)
 
 
 class Mandelbrot:

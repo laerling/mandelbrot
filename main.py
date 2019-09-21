@@ -17,6 +17,15 @@ def handleUserAction(user_action):
     global mb
     if user_action == draw.UserAction.PAUSE:
         mb.toggle_pause()
+    elif user_action == draw.UserAction.ZOOM_IN:
+        mb.frame.zoom()
+    elif user_action == draw.UserAction.ZOOM_OUT:
+        mb.frame.zoom(factor=0.5)
+    elif (user_action == draw.UserAction.MOVE_LEFT or
+          user_action == draw.UserAction.MOVE_RIGHT or
+          user_action == draw.UserAction.MOVE_UP or
+          user_action == draw.UserAction.MOVE_DOWN):
+        mb.frame.move(user_action)
     elif user_action == draw.UserAction.JULIA:
         mb.toggle_julia()
     elif user_action == draw.UserAction.RESET:
