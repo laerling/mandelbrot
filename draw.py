@@ -19,12 +19,11 @@ def init(width, height):
     _sf = pygame.Surface((width, height))
     _sf.fill(white)
 
-def maybeUpdate(update=True):
-    if update:
-        global _game_display
-        _game_display.blit(_sf, (0,0))
-        maybeQuit()
-        pygame.display.update()
+def update():
+    global _game_display
+    _game_display.blit(_sf, (0,0))
+    maybeQuit()
+    pygame.display.update()
 
 def maybeQuit():
     for event in pygame.event.get():
@@ -32,25 +31,28 @@ def maybeQuit():
             pygame.quit()
             quit()
 
-def pixel(pos, color=black, update=True):
+def pixel(pos, color=black, update_display=True):
     global _sf
     _sf.set_at(pos, color)
-    maybeUpdate(update)
+    if update_display:
+        update()
 
-def rectangle(pos_from, pos_to, color=black, update=True):
+def rectangle(pos_from, pos_to, color=black, update_display=True):
     global _sf
     rect = pygame.Rect(pos_from,
                        (abs(pos_to[0] - pos_from[0]),
                         abs(pos_to[1] - pos_from[1])))
     _sf.fill(color, rect)
-    maybeUpdate(update)
+    if update_display:
+        update()
 
-def partial_square(pos, max_size, shrink_f=1, color=black, update=True):
+def partial_square(pos, max_size, shrink_f=1,
+                   color=black, update_display=True):
     global _sf
     size = max(max_size / max(shrink_f, 1), 1)
     pos_from = (pos[0] - size / 2, pos[1] - size / 2)
     pos_to = (pos[0] + size / 2, pos[1] + size / 2)
-    rectangle(pos_from, pos_to, color=color, update=update)
+    rectangle(pos_from, pos_to, color=color, update_display=update_display)
 
 def idle():
     "commit surface and idle until program is quit"

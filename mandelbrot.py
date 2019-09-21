@@ -63,9 +63,8 @@ class Mandelbrot:
             update = random.randrange(1000) == 0
 
             # draw to screen
-            #draw.pixel(pos, color=(r,g,b), update=update)
+            update_after = 1000 # update every update_after steps
             draw.partial_square(pos, min(width, height),
                                 (count/1000+1),
-                                #color=(v,v,v),
                                 color=(r,g,b),
-                                update=(count%1000==0))
+                                update_display=(count % update_after == 0))
