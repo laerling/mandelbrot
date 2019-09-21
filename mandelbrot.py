@@ -44,6 +44,8 @@ class Mandelbrot:
     _julia_x = 0.7
     _julia_y = 0.3
 
+    _paused = False
+
     frame = Frame()
 
     def __init__(self, depth=_depth, threshold=_threshold, julia=_julia):
@@ -63,6 +65,12 @@ class Mandelbrot:
             self._julia_x = x
             self._julia_y = y
 
+    def toggle_pause(self):
+        self._paused = not self._paused
+
+    def unpause(self):
+        self._paused = False
+
     def calc_point(self, point, constant):
         for i in range(self._depth):
             point = ( point[0]**2 - point[1]**2 + constant[0],
@@ -72,6 +80,10 @@ class Mandelbrot:
         return i / (self._depth-1)
 
     def draw(self, width, height, steps=500_000):
+
+        # do nothing if paused
+        if self._paused:
+            return draw.idle()
 
         # clear canvas
         draw.rectangle((0,0), (width,height), draw.black)
@@ -110,5 +122,4 @@ class Mandelbrot:
                                 color=(r,g,b),
                                 #color=(val*255,val*255,val*255), # black and white
                                 update_display=(count % update_after == 0))
-
-        return draw.idle()
+        self._paused = True

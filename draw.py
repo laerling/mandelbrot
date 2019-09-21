@@ -29,6 +29,7 @@ class UserAction(Enum):
     CLICK = 0
     JULIA = 1
     RESET = 2
+    PAUSE = 3
 
 def getUserAction():
     "Return pygame events if they are valid user actions"
@@ -43,6 +44,8 @@ def getUserAction():
             if e.key == pygame.K_q:
                 pygame.quit()
                 quit()
+            elif e.key == pygame.K_SPACE:
+                return UserAction.PAUSE
             elif e.key == pygame.K_j:
                 return UserAction.JULIA
             elif e.key == pygame.K_r:
