@@ -5,26 +5,34 @@ import draw
 
 class Frame:
 
-    _x_min = -2
-    _x_max = 1
-    _y_min = -1.5
-    _y_max = 1.5
+    x = (-2, 1)
+    y = (-1.5, 1.5)
 
-    def __init__(self, min=(_x_min,_y_min), max=(_x_max,_y_max)):
-        self._x_min = min[0]
-        self._y_min = min[1]
-        self._x_max = max[0]
-        self._y_max = max[1]
+    def __init__(self, x=x, y=y):
+        self.x = x
+        self.y = y
 
     def __str__(self):
         return "( x:({}, {}), y:({}, {}) )".format(
-            self._x_min, self._x_max, self._y_min, self._y_max)
+            min(self.x), max(self.x), min(self.y), max(self.y))
 
     def rectify(self, width, height):
-        x_middle = self._x_min + (self._x_max - self._x_min) / 2
-        frame_width = (self._y_max - self._y_min) / height * width
-        self._x_min = x_middle - frame_width / 2
-        self._x_max = x_middle + frame_width / 2
+        frame_width = self.size_y() / height * width
+        self.x = (self.middle_x() - frame_width / 2,
+                  self.middle_x() + frame_width / 2)
+
+    def size_x(self):
+        return max(self.x) - min(self.x)
+
+    def size_y(self):
+        return max(self.y) - min(self.y)
+
+    def middle_x(self):
+        return min(self.x) + self.size_x() / 2
+
+    def middle_y(self):
+        return min(self.y) + self.size_y() / 2
+
 
 
 class Mandelbrot:
@@ -76,9 +84,9 @@ class Mandelbrot:
                 return user_action
 
             # initialize variables for this round
-            pos = (random.randrange(width), random.randrange(height))
-            c = (self.frame._x_min + (self.frame._x_max - self.frame._x_min) * (pos[0] / width),
-                 self.frame._y_min + (self.frame._y_max - self.frame._y_min) * (pos[1] / height))
+            point = (random.randrange(width), random.randrange(height))
+            c = (min(self.frame.x) + self.frame.size_x() * (point[0] / width),
+                 min(self.frame.y) + self.frame.size_y() * (point[1] / height))
 
             if self._julia:
                 val = self.calc_point(c, (self._julia_x, self._julia_y))
@@ -97,7 +105,7 @@ class Mandelbrot:
             # higher values make it too long to get finer.
             refining_speed = 750 # values between 500 and 1000 are good
             initial_shrink_f = 10
-            draw.partial_square(pos, min(width, height),
+            draw.partial_square(point, min(width, height),
                                 count / refining_speed + initial_shrink_f,
                                 color=(r,g,b),
                                 #color=(val*255,val*255,val*255), # black and white

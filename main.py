@@ -15,9 +15,7 @@ mb.frame.rectify(_width, _height)
 
 def handleUserAction(user_action):
     global mb
-    if user_action == draw.UserAction.CLICK:
-        pass # TODO: Zoom
-    elif user_action == draw.UserAction.JULIA:
+    if user_action == draw.UserAction.JULIA:
         mb.toggle_julia()
     elif user_action == draw.UserAction.RESET:
         mb = mandelbrot.Mandelbrot()
