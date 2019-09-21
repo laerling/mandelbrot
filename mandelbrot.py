@@ -47,9 +47,10 @@ class Mandelbrot:
                 break
         return i / (self._iter-1)
 
-    def draw(self, width, height, steps=500000):
+    def draw(self, width, height, steps=500_000):
         for count in range(steps):
-                # initialize variables for this round
+
+            # initialize variables for this round
             pos = (random.randrange(width), random.randrange(height))
             c = (self.frame._x_min + (self.frame._x_max - self.frame._x_min) * (pos[0] / width),
                  self.frame._y_min + (self.frame._y_max - self.frame._y_min) * (pos[1] / height))
@@ -64,7 +65,11 @@ class Mandelbrot:
 
             # draw to screen
             update_after = 1000 # update every update_after steps
+            # lower values for refining_speed make the picture stay coarse,
+            # higher values make it too long to get finer.
+            refining_speed = 750 # values between 500 and 1000 are good
+            initial_shrink_f = 10
             draw.partial_square(pos, min(width, height),
-                                (count/1000+1),
+                                count / refining_speed + initial_shrink_f,
                                 color=(r,g,b),
                                 update_display=(count % update_after == 0))
