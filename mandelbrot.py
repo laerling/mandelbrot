@@ -29,8 +29,8 @@ class Frame:
 
 class Mandelbrot:
 
-    _iter = 100
-    _max_val = 2
+    _depth = 100
+    _threshold = 10
 
     _julia = False
     _julia_x = 0.7
@@ -38,9 +38,9 @@ class Mandelbrot:
 
     frame = Frame()
 
-    def __init__(self, iter=_iter, max_val=_max_val, julia=_julia):
-        self._iter = iter
-        self._max_val = max_val
+    def __init__(self, depth=_depth, threshold=_threshold, julia=_julia):
+        self._depth = depth
+        self._threshold = threshold
         self._julia = julia
 
     def toggle_julia(self):
@@ -56,12 +56,12 @@ class Mandelbrot:
             self._julia_y = y
 
     def calc_point(self, point, constant):
-        for i in range(self._iter):
+        for i in range(self._depth):
             point = ( point[0]**2 - point[1]**2 + constant[0],
                   2 * point[0] * point[1] + constant[1] )
-            if point[0] > self._max_val or point[1] > self._max_val:
+            if point[0] > self._threshold or point[1] > self._threshold:
                 break
-        return i / (self._iter-1)
+        return i / (self._depth-1)
 
     def draw(self, width, height, steps=500_000):
 
