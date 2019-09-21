@@ -20,7 +20,9 @@ def handleUserAction(user_action):
     elif user_action == draw.UserAction.JULIA:
         mb.toggle_julia()
     elif user_action == draw.UserAction.RESET:
+        julia = mb.is_julia()
         mb = mandelbrot.Mandelbrot()
+        mb.set_julia(julia)
 
 # start
 while True:

@@ -67,6 +67,12 @@ class Mandelbrot:
             self._julia_x = x
             self._julia_y = y
 
+    def is_julia(self):
+        return self._julia
+
+    def set_julia(self, julia):
+        self._julia = julia
+
     def toggle_pause(self):
         self._paused = not self._paused
 
