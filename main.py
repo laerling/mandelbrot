@@ -18,7 +18,6 @@ def handleUserAction(user_action):
     if user_action == draw.UserAction.PAUSE:
         mb.toggle_pause()
     elif user_action == draw.UserAction.JULIA:
-        mb.unpause()
         mb.toggle_julia()
     elif user_action == draw.UserAction.RESET:
         mb = mandelbrot.Mandelbrot()

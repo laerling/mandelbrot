@@ -52,8 +52,10 @@ class Mandelbrot:
         self._depth = depth
         self._threshold = threshold
         self._julia = julia
+        self._paused = False
 
     def toggle_julia(self):
+        self._paused = False
         self._julia = not self._julia
         if self._julia:
             x = -2 + random.random() * 3
@@ -67,9 +69,6 @@ class Mandelbrot:
 
     def toggle_pause(self):
         self._paused = not self._paused
-
-    def unpause(self):
-        self._paused = False
 
     def calc_point(self, point, constant):
         for i in range(self._depth):
