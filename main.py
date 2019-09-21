@@ -8,12 +8,20 @@ import mandelbrot
 _width = 800
 _height = 600
 draw.init(_width, _height)
-draw.rectangle((0,0), (_width,_height), draw.black)
 
 # initialize variables
-m = mandelbrot.Mandelbrot()
-m.frame.rectify(_width, _height)
+mb = mandelbrot.Mandelbrot()
+mb.frame.rectify(_width, _height)
+
+def handleUserAction(user_action):
+    global mb
+    if user_action == draw.UserAction.CLICK:
+        pass # TODO: Zoom
+    elif user_action == draw.UserAction.JULIA:
+        mb.toggle_julia()
+    elif user_action == draw.UserAction.RESET:
+        mb = mandelbrot.Mandelbrot()
 
 # start
-m.draw(_width, _height)
-draw.idle()
+while True:
+    handleUserAction(mb.draw(_width, _height))

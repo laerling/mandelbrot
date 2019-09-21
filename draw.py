@@ -1,5 +1,6 @@
 import pygame
 import random
+from enum import Enum
 
 # define variables
 black = (0,0,0)
@@ -22,14 +23,31 @@ def init(width, height):
 def update():
     global _game_display
     _game_display.blit(_sf, (0,0))
-    maybeQuit()
     pygame.display.update()
 
-def maybeQuit():
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
+class UserAction(Enum):
+    CLICK = 0
+    JULIA = 1
+    RESET = 2
+
+def getUserAction():
+    "Return pygame events if they are valid user actions"
+    events = pygame.event.get()
+    for e in events:
+        if e.type == pygame.QUIT:
             pygame.quit()
             quit()
+        elif e.type == pygame.MOUSEBUTTONUP:
+            return UserAction.CLICK
+        elif e.type == pygame.KEYDOWN:
+            if e.key == pygame.K_q:
+                pygame.quit()
+                quit()
+            elif e.key == pygame.K_j:
+                return UserAction.JULIA
+            elif e.key == pygame.K_r:
+                return UserAction.RESET
+    return None
 
 def pixel(pos, color=black, update_display=True):
     global _sf
@@ -55,12 +73,14 @@ def partial_square(pos, max_size, shrink_f=1,
     rectangle(pos_from, pos_to, color=color, update_display=update_display)
 
 def idle():
-    "commit surface and idle until program is quit"
+    "commit surface and idle until next user action"
     global _sf
     global _clock
     _game_display.blit(_sf, (0,0))
     while True:
-        maybeQuit()
+        user_action = getUserAction()
+        if user_action != None:
+            return user_action
         pygame.display.update()
         _clock.tick(60)
 

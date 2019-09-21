@@ -32,30 +32,58 @@ class Mandelbrot:
     _iter = 100
     _max_val = 2
 
+    _julia = False
+    _julia_x = 0.7
+    _julia_y = 0.3
+
     frame = Frame()
 
-    def __init__(self, iter=_iter, max_val=_max_val):
+    def __init__(self, iter=_iter, max_val=_max_val, julia=_julia):
         self._iter = iter
         self._max_val = max_val
+        self._julia = julia
 
-    def calc_point(self, point):
-        x = (0,0)
+    def toggle_julia(self):
+        self._julia = not self._julia
+        if self._julia:
+            x = -2 + random.random() * 3
+            if x == 0:
+                y = -2 + random.random() * 4
+            else:
+                y = random.random() * 1 / (100 * abs(x))
+            print("Julia: ({}, {})".format(x, y))
+            self._julia_x = x
+            self._julia_y = y
+
+    def calc_point(self, point, constant):
         for i in range(self._iter):
-            x = ( x[0]**2 - x[1]**2 + point[0],
-                  2 * x[0] * x[1] + point[1] )
-            if x[0] > self._max_val or x[1] > self._max_val:
+            point = ( point[0]**2 - point[1]**2 + constant[0],
+                  2 * point[0] * point[1] + constant[1] )
+            if point[0] > self._max_val or point[1] > self._max_val:
                 break
         return i / (self._iter-1)
 
     def draw(self, width, height, steps=500_000):
+
+        # clear canvas
+        draw.rectangle((0,0), (width,height), draw.black)
+
         for count in range(steps):
+
+            # check for user action
+            user_action = draw.getUserAction()
+            if user_action != None:
+                return user_action
 
             # initialize variables for this round
             pos = (random.randrange(width), random.randrange(height))
             c = (self.frame._x_min + (self.frame._x_max - self.frame._x_min) * (pos[0] / width),
                  self.frame._y_min + (self.frame._y_max - self.frame._y_min) * (pos[1] / height))
 
-            val = self.calc_point(c)
+            if self._julia:
+                val = self.calc_point(c, (self._julia_x, self._julia_y))
+            else:
+                val = self.calc_point(c, c)
 
             # calculate colors
             r = max(0, math.sin(1.5 * math.pi * val                 )) * 255
@@ -72,4 +100,7 @@ class Mandelbrot:
             draw.partial_square(pos, min(width, height),
                                 count / refining_speed + initial_shrink_f,
                                 color=(r,g,b),
+                                #color=(val*255,val*255,val*255), # black and white
                                 update_display=(count % update_after == 0))
+
+        return draw.idle()
