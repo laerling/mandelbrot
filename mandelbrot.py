@@ -98,6 +98,18 @@ class Mandelbrot:
     def set_julia(self, julia):
         self._julia = julia
 
+    def julia_move(self, user_action=None, factor=0.1):
+        delta_x = self.frame.size_x() * factor
+        delta_y = self.frame.size_y() * factor
+        if user_action == draw.UserAction.JULIA_MOVE_UP:
+            self._julia_y += delta_y
+        elif user_action == draw.UserAction.JULIA_MOVE_DOWN:
+            self._julia_y -= delta_y
+        elif user_action == draw.UserAction.JULIA_MOVE_LEFT:
+            self._julia_x -= delta_x
+        elif user_action == draw.UserAction.JULIA_MOVE_RIGHT:
+            self._julia_x += delta_x
+
     def toggle_pause(self):
         self._paused = not self._paused
 

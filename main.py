@@ -26,6 +26,12 @@ def handleUserAction(user_action):
           user_action == draw.UserAction.MOVE_UP or
           user_action == draw.UserAction.MOVE_DOWN):
         mb.frame.move(user_action)
+    elif (user_action == draw.UserAction.JULIA_MOVE_LEFT or
+          user_action == draw.UserAction.JULIA_MOVE_RIGHT or
+          user_action == draw.UserAction.JULIA_MOVE_UP or
+          user_action == draw.UserAction.JULIA_MOVE_DOWN):
+        if mb.is_julia():
+            mb.julia_move(user_action)
     elif user_action == draw.UserAction.JULIA:
         mb.toggle_julia()
     elif user_action == draw.UserAction.RESET:
