@@ -48,6 +48,8 @@ class Frame:
         """
         if point == None:
             point = (self.middle_x(), self.middle_y())
+        if factor <= 0:
+            return # do nothing. Same as factor=1
         new_size_x = self.size_x() / factor
         new_size_y = self.size_y() / factor
         self.x = (point[0] - new_size_x / 2, point[0] + new_size_x / 2)
