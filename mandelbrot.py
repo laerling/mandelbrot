@@ -86,13 +86,14 @@ class Mandelbrot:
 
     _paused = False
 
-    frame = Frame()
+    frame = None
 
     def __init__(self, depth=_depth, threshold=_threshold, julia=_julia):
         self._depth = depth
         self._threshold = threshold
         self._julia = julia
         self._paused = False
+        self.frame = Frame()
 
     def get_depth(self):
         return self._depth;
