@@ -4,6 +4,7 @@ import draw
 
 
 class Frame:
+    "Represents the view and manages it's coordinates."
 
     x = (-2, 1)
     y = (-1.5, 1.5)
@@ -17,23 +18,34 @@ class Frame:
             min(self.x), max(self.x), min(self.y), max(self.y))
 
     def rectify(self, width, height):
+        "Adjusts the view's width to a certain proportion."
         frame_width = self.size_y() / height * width
         self.x = (self.middle_x() - frame_width / 2,
                   self.middle_x() + frame_width / 2)
 
     def size_x(self):
+        "Distance from left to right border"
         return max(self.x) - min(self.x)
 
     def size_y(self):
+        "Distance from upper to lower border"
         return max(self.y) - min(self.y)
 
     def middle_x(self):
+        "X coordinate of center point."
         return min(self.x) + self.size_x() / 2
 
     def middle_y(self):
+        "Y coordinate of center point."
         return min(self.y) + self.size_y() / 2
 
     def zoom(self, factor=2, point=None):
+        """Zoom in or out, depending on the factor.
+        
+        Values greater than 1 zoom in, values between 0 and 1 zoom
+        out.
+
+        """
         if point == None:
             point = (self.middle_x(), self.middle_y())
         new_size_x = self.size_x() / factor
@@ -42,6 +54,12 @@ class Frame:
         self.y = (point[1] - new_size_y / 2, point[1] + new_size_y / 2)
 
     def move(self, user_action=None, factor=0.25):
+        """Move view a specific distance into one of four directions.
+        
+        The distance is a fraction of the view's width or height,
+        depending on the direction of movement.
+
+        """
         size_x = self.size_x()
         size_y = self.size_y()
         if user_action == draw.UserAction.MOVE_UP:
@@ -55,6 +73,7 @@ class Frame:
 
 
 class Mandelbrot:
+    "Represents a mandelbrot set and all julia sets contained in it."
 
     _depth = 100
     _threshold = 10
@@ -77,9 +96,18 @@ class Mandelbrot:
         return self._depth;
 
     def set_depth(self, depth):
-        self._depth = depth
+        """Set new depth to DEPTH or to 2, if DEPTH is smaller than 2.
+        
+        DEPTH must not be smaller than 2, because the mandelbrot algorithm divides by (depth - 1).
+        """
+        self._depth = max(2, depth)
 
     def toggle_julia(self):
+        """Toggle between showing the mandelbrot set and a julia set.
+        
+        Chooses a random julia seed when switching to julia mode.
+
+        """
         self._paused = False
         self._julia = not self._julia
         if self._julia:
@@ -93,12 +121,20 @@ class Mandelbrot:
             self._julia_y = y
 
     def is_julia(self):
+        "Are we in julia mode? I. e., is a julia set displayed?"
         return self._julia
 
     def set_julia(self, julia):
+        "Enter or leave julia mode."
         self._julia = julia
 
     def julia_move(self, user_action=None, factor=0.1):
+        """Move the julia seed around in the mandelbrot set.
+        
+        The distance of movement is a fraction of the view's width or
+        height, depending on the direction of movement.
+
+        """
         delta_x = self.frame.size_x() * factor
         delta_y = self.frame.size_y() * factor
         if user_action == draw.UserAction.JULIA_MOVE_UP:
@@ -111,9 +147,11 @@ class Mandelbrot:
             self._julia_x += delta_x
 
     def toggle_pause(self):
+        "Pause or unpause the rendering process."
         self._paused = not self._paused
 
     def calc_point(self, point, constant):
+        "Calculate if POINT is within the mandelbrot set or a specific julia set, depending on CONSTANT."
         for i in range(self._depth):
             point = ( point[0]**2 - point[1]**2 + constant[0],
                   2 * point[0] * point[1] + constant[1] )
@@ -122,6 +160,7 @@ class Mandelbrot:
         return i / (self._depth-1)
 
     def draw(self, width, height, steps=500_000):
+        "Render the mandelbrot set or a julia set."
 
         # do nothing if paused
         if self._paused:
@@ -154,10 +193,13 @@ class Mandelbrot:
             update = random.randrange(1000) == 0
 
             # draw to screen
-            update_after = 1000 # update every update_after steps
-            # lower values for refining_speed make the picture stay coarse,
-            # higher values make it too long to get finer.
-            refining_speed = 750 # values between 500 and 1000 are good
+            # Update every update_after steps
+            update_after = 1000
+            # refining_speed: Lower values make the picture stay
+            # coarse, higher values make it too long to get
+            # finer. Values between 500 and 1000 are good.
+            refining_speed = 750
+            # How much should the squares be shrinked in the beginning?
             initial_shrink_f = 10
             draw.partial_square(point, min(width, height),
                                 count / refining_speed + initial_shrink_f,

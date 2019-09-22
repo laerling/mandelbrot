@@ -2,11 +2,13 @@ import pygame
 import random
 from enum import Enum
 
+
 # define variables
 black = (0,0,0)
 white = (255,255,255)
 
 def init(width, height):
+    "Initialize pygame and variables."
     global _game_display
     global _clock
     global _sf
@@ -21,11 +23,13 @@ def init(width, height):
     _sf.fill(white)
 
 def update():
+    "Update the display."
     global _game_display
     _game_display.blit(_sf, (0,0))
     pygame.display.update()
 
 class UserAction(Enum):
+    "Possible actions from the user."
     RESET = 0
     PAUSE = 1
     JULIA = 2
@@ -43,7 +47,7 @@ class UserAction(Enum):
     JULIA_MOVE_RIGHT = 14
 
 def getUserAction():
-    "Return pygame events if they are valid user actions"
+    "Return pygame events if they are valid user actions."
     events = pygame.event.get()
     for e in events:
         if e.type == pygame.QUIT:
@@ -86,12 +90,14 @@ def getUserAction():
     return None
 
 def pixel(pos, color=black, update_display=True):
+    "Color one pixel."
     global _sf
     _sf.set_at(pos, color)
     if update_display:
         update()
 
 def rectangle(pos_from, pos_to, color=black, update_display=True):
+    "Color a rectangle starting at POS_FROM and ending at POS_TO."
     global _sf
     rect = pygame.Rect(pos_from,
                        (abs(pos_to[0] - pos_from[0]),
@@ -102,6 +108,7 @@ def rectangle(pos_from, pos_to, color=black, update_display=True):
 
 def partial_square(pos, max_size, shrink_f=1,
                    color=black, update_display=True):
+    "Color a square at POS of size MAX_SIZE, shrunken about a factor of SHRINK_F."
     global _sf
     size = max(max_size / max(shrink_f, 1), 1)
     pos_from = (pos[0] - size / 2, pos[1] - size / 2)
@@ -109,7 +116,7 @@ def partial_square(pos, max_size, shrink_f=1,
     rectangle(pos_from, pos_to, color=color, update_display=update_display)
 
 def idle():
-    "commit surface and idle until next user action"
+    "Commit surface and idle until next user action."
     global _sf
     global _clock
     _game_display.blit(_sf, (0,0))
@@ -121,6 +128,7 @@ def idle():
         _clock.tick(60)
 
 def randomColor():
+    "Return a random color tuple."
     return (random.randint(0,255),
             random.randint(0,255),
             random.randint(0,255))
