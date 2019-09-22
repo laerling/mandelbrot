@@ -73,6 +73,12 @@ class Mandelbrot:
         self._julia = julia
         self._paused = False
 
+    def get_depth(self):
+        return self._depth;
+
+    def set_depth(self, depth):
+        self._depth = depth
+
     def toggle_julia(self):
         self._paused = False
         self._julia = not self._julia

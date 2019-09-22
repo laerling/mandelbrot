@@ -36,6 +36,8 @@ class UserAction(Enum):
     MOVE_DOWN = 7
     MOVE_LEFT = 8
     MOVE_RIGHT = 9
+    INCREASE_DEPTH = 10
+    DECREASE_DEPTH = 11
 
 def getUserAction():
     "Return pygame events if they are valid user actions"
@@ -68,6 +70,10 @@ def getUserAction():
                 return UserAction.MOVE_LEFT
             elif e.key == pygame.K_RIGHT:
                 return UserAction.MOVE_RIGHT
+            elif e.key == pygame.K_PERIOD:
+                return UserAction.INCREASE_DEPTH
+            elif e.key == pygame.K_COMMA:
+                return UserAction.DECREASE_DEPTH
     return None
 
 def pixel(pos, color=black, update_display=True):
