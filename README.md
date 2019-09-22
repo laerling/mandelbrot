@@ -20,7 +20,7 @@
 
 The color distribution for red, green and blue is as follows:
 
-![Color distribution](./color distribution.png)
+![Color distribution](./color_distribution.png)
 
 The X axis represents the amount of iterations it took for a mandelbrot series to escape the set threshold, depending on the depth.
 The Y axis represents the value of the color component (red, green, or blue).
