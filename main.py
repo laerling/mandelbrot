@@ -2,6 +2,7 @@
 
 import draw
 import mandelbrot
+import math
 
 
 # initialize canvas
@@ -38,9 +39,13 @@ def handle_user_action(user_action):
         mb = mandelbrot.Mandelbrot(julia=mb.is_julia())
         mb.frame.rectify(_width, _height)
     elif user_action == draw.UserAction.INCREASE_DEPTH:
-        mb.set_depth(mb.get_depth() + 10)
+        # Round to ceiling, else e. g. (2 * 1.1) = 2.2 becomes 2 again.
+        mb.set_depth(math.ceil(mb.get_depth() * 1.1))
+        print("Set depth to", mb.get_depth())
     elif user_action == draw.UserAction.DECREASE_DEPTH:
-        mb.set_depth(mb.get_depth() - 10)
+        # Round to floor, else e. g. (2 / 1.1) 1.818 becomes 2 again.
+        mb.set_depth(math.floor(mb.get_depth() / 1.1))
+        print("Set depth to", mb.get_depth())
 
 # start
 while True:
