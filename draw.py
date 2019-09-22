@@ -26,22 +26,21 @@ def update():
     pygame.display.update()
 
 class UserAction(Enum):
-    CLICK = 0
-    JULIA = 1
-    RESET = 2
-    PAUSE = 3
-    ZOOM_IN = 4
-    ZOOM_OUT = 5
-    MOVE_UP = 6
-    MOVE_DOWN = 7
-    MOVE_LEFT = 8
-    MOVE_RIGHT = 9
-    INCREASE_DEPTH = 10
-    DECREASE_DEPTH = 11
-    JULIA_MOVE_UP = 12
-    JULIA_MOVE_DOWN = 13
-    JULIA_MOVE_LEFT = 14
-    JULIA_MOVE_RIGHT = 15
+    RESET = 0
+    PAUSE = 1
+    JULIA = 2
+    ZOOM_IN = 3
+    ZOOM_OUT = 4
+    MOVE_UP = 5
+    MOVE_DOWN = 6
+    MOVE_LEFT = 7
+    MOVE_RIGHT = 8
+    INCREASE_DEPTH = 9
+    DECREASE_DEPTH = 10
+    JULIA_MOVE_UP = 11
+    JULIA_MOVE_DOWN = 12
+    JULIA_MOVE_LEFT = 13
+    JULIA_MOVE_RIGHT = 14
 
 def getUserAction():
     "Return pygame events if they are valid user actions"
@@ -50,8 +49,6 @@ def getUserAction():
         if e.type == pygame.QUIT:
             pygame.quit()
             quit()
-        elif e.type == pygame.MOUSEBUTTONUP:
-            return UserAction.CLICK
         elif e.type == pygame.KEYDOWN:
             if e.key == pygame.K_q:
                 pygame.quit()
