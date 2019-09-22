@@ -172,7 +172,7 @@ class Mandelbrot:
         for count in range(steps):
 
             # check for user action
-            user_action = draw.getUserAction()
+            user_action = draw.get_user_action()
             if user_action != None:
                 return user_action
 

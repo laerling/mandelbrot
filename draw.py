@@ -46,7 +46,7 @@ class UserAction(Enum):
     JULIA_MOVE_LEFT = 13
     JULIA_MOVE_RIGHT = 14
 
-def getUserAction():
+def get_user_action():
     "Return pygame events if they are valid user actions."
     events = pygame.event.get()
     for e in events:
@@ -121,13 +121,13 @@ def idle():
     global _clock
     _game_display.blit(_sf, (0,0))
     while True:
-        user_action = getUserAction()
+        user_action = get_user_action()
         if user_action != None:
             return user_action
         pygame.display.update()
         _clock.tick(60)
 
-def randomColor():
+def random_color():
     "Return a random color tuple."
     return (random.randint(0,255),
             random.randint(0,255),

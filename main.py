@@ -13,7 +13,7 @@ draw.init(_width, _height)
 mb = mandelbrot.Mandelbrot()
 mb.frame.rectify(_width, _height)
 
-def handleUserAction(user_action):
+def handle_user_action(user_action):
     global mb
     if user_action == draw.UserAction.PAUSE:
         mb.toggle_pause()
@@ -45,4 +45,4 @@ def handleUserAction(user_action):
 
 # start
 while True:
-    handleUserAction(mb.draw(_width, _height))
+    handle_user_action(mb.draw(_width, _height))
