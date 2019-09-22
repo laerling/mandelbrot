@@ -35,9 +35,8 @@ def handle_user_action(user_action):
     elif user_action == draw.UserAction.JULIA:
         mb.toggle_julia()
     elif user_action == draw.UserAction.RESET:
-        julia = mb.is_julia()
-        mb = mandelbrot.Mandelbrot()
-        mb.set_julia(julia)
+        mb = mandelbrot.Mandelbrot(julia=mb.is_julia())
+        mb.frame.rectify(_width, _height)
     elif user_action == draw.UserAction.INCREASE_DEPTH:
         mb.set_depth(mb.get_depth() + 10)
     elif user_action == draw.UserAction.DECREASE_DEPTH:
