@@ -95,6 +95,7 @@ class Mandelbrot:
         self._paused = False
         self.frame = Frame()
         self.print_julia_params();
+        draw.set_title("Mandelbrot")
 
     def get_depth(self):
         return self._depth;
@@ -116,7 +117,7 @@ class Mandelbrot:
 
         """
         self._paused = False
-        self._julia = not self._julia
+        self.set_julia(not self._julia)
         if self._julia:
             x = -2 + random.random() * 3
             if x == 0:
@@ -134,6 +135,8 @@ class Mandelbrot:
     def set_julia(self, julia):
         "Enter or leave julia mode."
         self._julia = julia
+        if julia:
+            draw.set_title("Mandelbrot (julia)")
 
     def julia_move(self, user_action=None, factor=0.1):
         """Move the julia seed around in the mandelbrot set.
@@ -170,9 +173,18 @@ class Mandelbrot:
     def draw(self, width, height, steps=500_000):
         "Render the mandelbrot set or a julia set."
 
+        # update window title
+        if self.is_julia():
+            draw.set_title("Mandelbrot (julia) (rendering)")
+        else:
+            draw.set_title("Mandelbrot (rendering)")
+
         # do nothing if paused
         if self._paused:
-            return draw.idle()
+            if self.is_julia():
+                return draw.idle("Mandelbrot (julia)")
+            else:
+                return draw.idle("Mandelbrot")
 
         # clear canvas
         draw.rectangle((0,0), (width,height), draw.black)
@@ -189,7 +201,7 @@ class Mandelbrot:
             c = (min(self.frame.x) + self.frame.size_x() * (point[0] / width),
                  min(self.frame.y) + self.frame.size_y() * (point[1] / height))
 
-            if self._julia:
+            if self.is_julia():
                 val = self.calc_point(c, (self._julia_x, self._julia_y))
             else:
                 val = self.calc_point(c, c)

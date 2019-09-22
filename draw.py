@@ -22,6 +22,9 @@ def init(width, height):
     _sf = pygame.Surface((width, height))
     _sf.fill(white)
 
+def set_title(title):
+    pygame.display.set_caption(title)
+
 def update():
     "Update the display."
     global _game_display
@@ -115,11 +118,12 @@ def partial_square(pos, max_size, shrink_f=1,
     pos_to = (pos[0] + size / 2, pos[1] + size / 2)
     rectangle(pos_from, pos_to, color=color, update_display=update_display)
 
-def idle():
-    "Commit surface and idle until next user action."
+def idle(title):
+    "Commit surface, set window title, and idle until next user action."
     global _sf
     global _clock
     _game_display.blit(_sf, (0,0))
+    set_title(title)
     while True:
         user_action = get_user_action()
         if user_action != None:
