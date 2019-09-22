@@ -94,6 +94,7 @@ class Mandelbrot:
         self._julia = julia
         self._paused = False
         self.frame = Frame()
+        self.print_julia_params();
 
     def get_depth(self):
         return self._depth;
@@ -104,6 +105,9 @@ class Mandelbrot:
         DEPTH must not be smaller than 2, because the mandelbrot algorithm divides by (depth - 1).
         """
         self._depth = max(2, depth)
+
+    def print_julia_params(self):
+        print("Julia: ({}, {})".format(self._julia_x, self._julia_y))
 
     def toggle_julia(self):
         """Toggle between showing the mandelbrot set and a julia set.
@@ -119,9 +123,9 @@ class Mandelbrot:
                 y = -2 + random.random() * 4
             else:
                 y = random.random() * 1 / (100 * abs(x))
-            print("Julia: ({}, {})".format(x, y))
             self._julia_x = x
             self._julia_y = y
+            self.print_julia_params()
 
     def is_julia(self):
         "Are we in julia mode? I. e., is a julia set displayed?"
@@ -148,6 +152,7 @@ class Mandelbrot:
             self._julia_x -= delta_x
         elif user_action == draw.UserAction.JULIA_MOVE_RIGHT:
             self._julia_x += delta_x
+        self.print_julia_params()
 
     def toggle_pause(self):
         "Pause or unpause the rendering process."
