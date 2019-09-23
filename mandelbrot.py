@@ -81,6 +81,7 @@ class Mandelbrot:
 
     _depth = 100
     _threshold = 10
+    _colortable = []
 
     _julia = False
     _julia_x = 0.7
@@ -96,6 +97,7 @@ class Mandelbrot:
         self._julia = julia
         self._paused = False
         self.frame = Frame()
+        self.generate_colortable()
         self.print_julia_params();
         draw.set_title("Mandelbrot")
 
@@ -109,6 +111,17 @@ class Mandelbrot:
         """
         self._paused = False
         self._depth = max(2, depth)
+        self.generate_colortable()
+
+    def generate_colortable(self):
+        self._colortable = []
+        for v in range(self._depth):
+            val = v / (self._depth - 1) # [0; 1]
+            self._colortable.append((
+                math.floor(max(0, math.sin(1.5 * math.pi * val                 )) * 255), # red
+                math.floor(max(0, math.sin(1.5 * math.pi * val - 0.25 * math.pi)) * 255), # green
+                math.floor(max(0, math.sin(1.5 * math.pi * val - 0.5  * math.pi)) * 255), # blue
+                ))
 
     def print_julia_params(self):
         print("Julia: ({}, {})".format(self._julia_x, self._julia_y))
@@ -164,14 +177,14 @@ class Mandelbrot:
         "Pause or unpause the rendering process."
         self._paused = not self._paused
 
-    def calc_point(self, point, constant):
-        "Calculate if POINT is within the mandelbrot set or a specific julia set, depending on CONSTANT."
-        for i in range(self._depth):
+    def calc_color(self, point, constant):
+        "Calculate whether POINT is within the mandelbrot set or a specific julia set, depending on CONSTANT."
+        for colortable_index in range(self._depth):
             point = ( point[0]**2 - point[1]**2 + constant[0],
                   2 * point[0] * point[1] + constant[1] )
             if point[0] > self._threshold or point[1] > self._threshold:
                 break
-        return i / (self._depth-1)
+        return colortable_index
 
     def draw(self, width, height, steps=500_000):
         "Render the mandelbrot set or a julia set."
@@ -199,21 +212,16 @@ class Mandelbrot:
             if user_action != None:
                 return user_action
 
-            # initialize variables for this round
+            # calculate point
             point = (random.randrange(width), random.randrange(height))
             c = (min(self.frame.x) + self.frame.size_x() * (point[0] / width),
                  min(self.frame.y) + self.frame.size_y() * (point[1] / height))
 
+            # calculate color for point
+            constant = c
             if self.is_julia():
-                val = self.calc_point(c, (self._julia_x, self._julia_y))
-            else:
-                val = self.calc_point(c, c)
-
-            # calculate colors
-            r = max(0, math.sin(1.5 * math.pi * val                 )) * 255
-            g = max(0, math.sin(1.5 * math.pi * val - 0.25 * math.pi)) * 255
-            b = max(0, math.sin(1.5 * math.pi * val - 0.5  * math.pi)) * 255
-            update = random.randrange(1000) == 0
+                constant = (self._julia_x, self._julia_y)
+            colorindex = self.calc_color(c, constant)
 
             # draw to screen
             # Update every update_after steps
@@ -226,7 +234,7 @@ class Mandelbrot:
             initial_shrink_f = 10
             draw.partial_square(point, min(width, height),
                                 count / refining_speed + initial_shrink_f,
-                                color=(r,g,b),
+                                color=self._colortable[colorindex],
                                 #color=(val*255,val*255,val*255), # black and white
                                 update_display=(count % update_after == 0))
         self._paused = True
