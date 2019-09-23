@@ -52,6 +52,8 @@ class Frame:
             return # do nothing. Same as factor=1
         new_size_x = self.size_x() / factor
         new_size_y = self.size_y() / factor
+        print("Frame after zoom (factor={}): {} x {}"
+                .format(factor, new_size_x, new_size_y))
         self.x = (point[0] - new_size_x / 2, point[0] + new_size_x / 2)
         self.y = (point[1] - new_size_y / 2, point[1] + new_size_y / 2)
 
