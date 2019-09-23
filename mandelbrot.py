@@ -105,6 +105,7 @@ class Mandelbrot:
         
         DEPTH must not be smaller than 2, because the mandelbrot algorithm divides by (depth - 1).
         """
+        self._paused = False
         self._depth = max(2, depth)
 
     def print_julia_params(self):
