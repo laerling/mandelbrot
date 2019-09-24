@@ -1,52 +1,82 @@
 #!/usr/bin/env python3.7
 
-import draw
 import mandelbrot
 import math
+import pygame
+import canvas
+import view
 
 
-# initialize canvas
-_width = 800
-_height = 600
-draw.init(_width, _height)
+canvas = canvas.Canvas(800, 600)
 
-# initialize variables
-mb = mandelbrot.Mandelbrot()
-mb.frame.rectify(_width, _height)
+mb = mandelbrot.Mandelbrot(canvas)
+mb.view.rectify()
 
-def handle_user_action(user_action):
-    global mb
-    if user_action == draw.UserAction.PAUSE:
-        mb.toggle_pause()
-    elif user_action == draw.UserAction.ZOOM_IN:
-        mb.frame.zoom()
-    elif user_action == draw.UserAction.ZOOM_OUT:
-        mb.frame.zoom(factor=0.5)
-    elif (user_action == draw.UserAction.MOVE_LEFT or
-          user_action == draw.UserAction.MOVE_RIGHT or
-          user_action == draw.UserAction.MOVE_UP or
-          user_action == draw.UserAction.MOVE_DOWN):
-        mb.frame.move(user_action)
-    elif (user_action == draw.UserAction.JULIA_MOVE_LEFT or
-          user_action == draw.UserAction.JULIA_MOVE_RIGHT or
-          user_action == draw.UserAction.JULIA_MOVE_UP or
-          user_action == draw.UserAction.JULIA_MOVE_DOWN):
-        if mb.is_julia():
-            mb.julia_move(user_action)
-    elif user_action == draw.UserAction.JULIA:
-        mb.toggle_julia()
-    elif user_action == draw.UserAction.RESET:
-        mb = mandelbrot.Mandelbrot(julia=mb.is_julia())
-        mb.frame.rectify(_width, _height)
-    elif user_action == draw.UserAction.INCREASE_DEPTH:
-        # Round to ceiling, else e. g. (2 * 1.1) = 2.2 becomes 2 again.
-        mb.set_depth(math.ceil(mb.get_depth() * 1.1))
-        print("Set depth to", mb.get_depth())
-    elif user_action == draw.UserAction.DECREASE_DEPTH:
-        # Round to floor, else e. g. (2 / 1.1) 1.818 becomes 2 again.
-        mb.set_depth(math.floor(mb.get_depth() / 1.1))
-        print("Set depth to", mb.get_depth())
-
-# start
 while True:
-    handle_user_action(mb.draw(_width, _height))
+    events = mb.render()
+    # handle events, mainly keys
+    for e in events:
+
+        # quit
+        if e.type == pygame.QUIT:
+            pygame.quit()
+            quit()
+
+        # keys
+        elif e.type == pygame.KEYDOWN:
+
+            # quit
+            if e.key == pygame.K_q:
+                pygame.quit()
+                quit()
+
+            # pause/unpause rendering
+            elif e.key == pygame.K_SPACE:
+                mb.toggle_pause()
+
+            # julia on/off
+            elif e.key == pygame.K_j:
+                mb.toggle_julia()
+
+            # reset
+            elif e.key == pygame.K_r:
+                julia = mb._juliamode
+                mb = mandelbrot.Mandelbrot(canvas)
+                mb._juliamode = julia
+                mb.view.rectify()
+
+            # zooming
+            elif e.key == pygame.K_PLUS:
+                mb.view.zoom(factor=2)
+            elif e.key == pygame.K_MINUS:
+                mb.view.zoom(factor=0.5)
+
+            # moving around
+            elif e.key == pygame.K_UP:
+                mb.view.move(view.Direction.UP)
+            elif e.key == pygame.K_DOWN:
+                mb.view.move(view.Direction.DOWN)
+            elif e.key == pygame.K_LEFT:
+                mb.view.move(view.Direction.LEFT)
+            elif e.key == pygame.K_RIGHT:
+                mb.view.move(view.Direction.RIGHT)
+
+            # changing depth
+            elif e.key == pygame.K_PERIOD:
+                # Round to ceiling, else e. g. (2 * 1.1) = 2.2 becomes 2 again.
+                mb.set_depth(math.ceil(mb._depth * 1.1))
+                print("Set depth to", mb._depth)
+            elif e.key == pygame.K_COMMA:
+                # Round to floor, else e. g. (2 / 1.1) 1.818 becomes 2 again.
+                mb.set_depth(math.floor(mb._depth / 1.1))
+                print("Set depth to", mb._depth)
+
+            # moving julia constant
+            elif e.key == pygame.K_w:
+                mb.julia_move(view.Direction.UP)
+            elif e.key == pygame.K_s:
+                mb.julia_move(view.Direction.DOWN)
+            elif e.key == pygame.K_a:
+                mb.julia_move(view.Direction.LEFT)
+            elif e.key == pygame.K_d:
+                mb.julia_move(view.Direction.RIGHT)
