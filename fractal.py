@@ -7,8 +7,8 @@ class Fractal():
     """Represents a generic fractal with universal parameters and a rendering function.
     
     This class shall not be instantiated directly.
-    The class deriving from Fractal must define the following
-    functions: set_title, calc_point
+    The class deriving from Fractal must define the functions
+    set_title and calc_point or overwrite the render function.
 
     """
 
