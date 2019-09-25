@@ -7,7 +7,24 @@ import canvas
 import view
 
 
-canvas = canvas.Canvas(800, 600)
+canvas = canvas.Canvas(800, 600, [
+    pygame.K_q,
+    pygame.K_SPACE,
+    pygame.K_j,
+    pygame.K_r,
+    pygame.K_PLUS,
+    pygame.K_MINUS,
+    pygame.K_UP,
+    pygame.K_DOWN,
+    pygame.K_LEFT,
+    pygame.K_RIGHT,
+    pygame.K_PERIOD,
+    pygame.K_COMMA,
+    pygame.K_w,
+    pygame.K_a,
+    pygame.K_s,
+    pygame.K_d
+])
 
 mb = mandelbrot.Mandelbrot(canvas)
 mb.view.rectify()

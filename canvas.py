@@ -13,10 +13,11 @@ class Canvas():
 
     """
 
-    def __init__(self, width, height):
+    def __init__(self, width, height, allowed_keyevents):
         # init pygame
         pygame.init()
         self._game_display = pygame.display.set_mode((width,height))
+        self.allowed_keyevents = allowed_keyevents
         # init drawing surface
         self.width = width
         self.height = height
@@ -31,6 +32,14 @@ class Canvas():
         "Update the display."
         self._game_display.blit(self._sf, (0,0))
         pygame.display.update()
+
+    def get_events(self):
+        events = pygame.event.get()
+        for e in events:
+            if e.type == pygame.QUIT \
+            or e.type == pygame.KEYDOWN \
+            and e.key in self.allowed_keyevents:
+                return events
 
     def pixel(self, pos, color=BLACK):
         "Color one pixel."

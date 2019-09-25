@@ -113,8 +113,8 @@ class Mandelbrot:
         for count in range(steps):
 
             # check for events
-            events = pygame.event.get()
-            if events != []:
+            events = self.view.canvas.get_events()
+            if events != None:
                 return events
 
             # calculate point
@@ -152,8 +152,8 @@ class Mandelbrot:
         self.view.canvas.update()
         self.view.canvas.set_title(title)
         while True:
-            events = pygame.event.get()
-            if events != []:
+            events = self.view.canvas.get_events()
+            if events != None:
                 return events
             pygame.display.update()
             pygame.time.Clock().tick(60)
