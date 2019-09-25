@@ -5,13 +5,14 @@ class Julia(fractal.Fractal):
     "Represents julia sets."
 
     def __init__(self, super, canvas, depth=100, constant=(0.7,0.3),
-                 threshold=2, allowed_keyevents=[]):
+                 color=True, threshold=2, allowed_keyevents=[]):
         self.paused = False
         # set parameters
         self._depth = depth
         self.generate_colortable()
         self.threshold = threshold
         self.constant = constant
+        self.color = color
         # make view
         self.view = view.View(canvas, x=(-1.5,1.5), y=(-1.5,1.5))
         self.allowed_keyevents = allowed_keyevents

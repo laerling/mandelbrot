@@ -6,7 +6,7 @@ import view
 class Mandelbox(fractal.Fractal):
     "Represents the mandelbox set."
 
-    def __init__(self, canvas, depth=100, scale=1.5,
+    def __init__(self, canvas, depth=100, scale=1.5, color=True,
                  threshold=2, allowed_keyevents=[]):
         self.paused = False
         # set parameters
@@ -14,6 +14,7 @@ class Mandelbox(fractal.Fractal):
         self.generate_colortable()
         self.scale = scale
         self.threshold = threshold
+        self.color = color
         # make view
         self.view = view.View(canvas, x=(-2,2), y=(-2,2))
         self.allowed_keyevents = allowed_keyevents
@@ -115,12 +116,18 @@ class Mandelbox(fractal.Fractal):
             scale = 1 / (count / shrinking_speed + 10)
             size = scale * max_size
 
+            # choose color
+            if self.color:
+                color = self._colortable[colorindex]
+            else:
+                v = (colorindex / self._depth) * 255
+                color = (v,v,v)
+
             # draw squares into all four quadrants
             for y_mul in range(-1,2,2):
                 for x_mul in range(-1,2,2):
                     p = (point[0] * x_mul, point[1] * y_mul)
-                    self.view.square(p, self._colortable[colorindex],
-                                     size=size)
+                    self.view.square(p, color, size=size)
 
             # Update every update_after steps
             update_after = 1000

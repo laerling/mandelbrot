@@ -26,6 +26,7 @@ general_keys = [
     pygame.K_RIGHT,  # move right
     pygame.K_PERIOD, # increase depth
     pygame.K_COMMA,  # decrease depth
+    pygame.K_c,      # toggle color
 ]
 
 def make_mandelbrot():
@@ -54,9 +55,7 @@ def make_mandelbox():
 
 def make_logistic_map():
     l = logistic_map.LogisticMap(
-        canvas, allowed_keyevents=general_keys + [
-            pygame.K_c, # toggle color
-        ])
+        canvas, allowed_keyevents=general_keys)
     # don't rectify view, because there's no symmetry
     return l
 

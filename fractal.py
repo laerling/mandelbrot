@@ -79,9 +79,15 @@ class Fractal():
             scale = 1 / (count / shrinking_speed + 10)
             size = scale * max_size
 
+            # choose color
+            if self.color:
+                color = self._colortable[colorindex]
+            else:
+                v = (colorindex / self._depth) * 255
+                color = (v,v,v)
+
             # draw square
-            self.view.square(point, self._colortable[colorindex],
-                             size=size)
+            self.view.square(point, color, size=size)
 
             # Update every update_after steps
             update_after = 1000

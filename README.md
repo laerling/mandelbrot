@@ -6,11 +6,12 @@
 | quit                              | q             |
 | move around                       | arrow keys    |
 | zoom in/out                       | + / -         |
-| reset parameters                  | r             |
 | pause/resume rendering            | space         |
+| cycle through fractals            | f             |
+| reset parameters                  | r             |
 | increase/decrease rendering depth | . / ,         |
-| toggle julia                      | j             |
 | move julia constant               | w / a / s / d |
+| toggle color                      | c             |
 
 ## Example renderings
 

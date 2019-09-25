@@ -5,13 +5,14 @@ import view
 class Mandelbrot(fractal.Fractal):
     "Represents the mandelbrot set."
 
-    def __init__(self, canvas, depth=100,
+    def __init__(self, canvas, depth=100, color=True,
                  threshold=2, allowed_keyevents=[]):
         self.paused = False
         # set parameters
         self._depth = depth
         self.generate_colortable()
         self.threshold = threshold
+        self.color = color
         # make view
         self.view = view.View(canvas, x=(-2.1,0.9), y=(-1.1,1.1))
         self.allowed_keyevents = allowed_keyevents
