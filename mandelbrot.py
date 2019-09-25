@@ -13,7 +13,7 @@ class Mandelbrot(fractal.Fractal):
         self.generate_colortable()
         self.threshold = threshold
         # make view
-        self.view = view.View(canvas, x=(-2,1), y=(-1.5,1.5))
+        self.view = view.View(canvas, x=(-2.1,0.9), y=(-1.1,1.1))
         self.allowed_keyevents = allowed_keyevents
         self.set_title(rendering=False)
 
