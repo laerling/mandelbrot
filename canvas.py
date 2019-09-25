@@ -13,11 +13,10 @@ class Canvas():
 
     """
 
-    def __init__(self, width, height, allowed_keyevents):
+    def __init__(self, width, height):
         # init pygame
         pygame.init()
         self._game_display = pygame.display.set_mode((width,height))
-        self.allowed_keyevents = allowed_keyevents
         # init drawing surface
         self.width = width
         self.height = height
@@ -33,14 +32,6 @@ class Canvas():
         self._game_display.blit(self._sf, (0,0))
         pygame.display.update()
 
-    def get_events(self):
-        events = pygame.event.get()
-        for e in events:
-            if e.type == pygame.QUIT \
-            or e.type == pygame.KEYDOWN \
-            and e.key in self.allowed_keyevents:
-                return events
-
     def pixel(self, pos, color=BLACK):
         "Color one pixel."
         self._sf.set_at(pos, color)
@@ -52,6 +43,7 @@ class Canvas():
         self._sf.fill(color, rect)
 
     def fill(self, color=WHITE):
+        "Fill the entire canvas with one color."
         self._sf.fill(color)
 
     def shrunken_square(self, pos, max_size, shrink_factor=1, color=BLACK):

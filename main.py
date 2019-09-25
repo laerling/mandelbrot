@@ -1,44 +1,79 @@
 #!/usr/bin/env python3.7
 
+import julia
 import mandelbrot
+
+import canvas
 import math
 import pygame
-import canvas
 import view
 
 
-canvas = canvas.Canvas(800, 600, [
-    pygame.K_q,
-    pygame.K_SPACE,
-    pygame.K_j,
-    pygame.K_r,
-    pygame.K_PLUS,
-    pygame.K_MINUS,
-    pygame.K_UP,
-    pygame.K_DOWN,
-    pygame.K_LEFT,
-    pygame.K_RIGHT,
-    pygame.K_PERIOD,
-    pygame.K_COMMA,
-    pygame.K_w,
-    pygame.K_a,
-    pygame.K_s,
-    pygame.K_d
-])
+canvas = canvas.Canvas(800, 600)
 
-mb = mandelbrot.Mandelbrot(canvas)
-mb.view.rectify()
+general_keys = [
+    pygame.K_q,      # quit
+    pygame.K_SPACE,  # pause rendering
+    pygame.K_f,      # cycle between fractals
+    pygame.K_r,      # reset parameters
+    pygame.K_PLUS,   # zoom in
+    pygame.K_MINUS,  # zoom out
+    pygame.K_UP,     # move up
+    pygame.K_DOWN,   # move down
+    pygame.K_LEFT,   # move left
+    pygame.K_RIGHT,  # move right
+    pygame.K_PERIOD, # increase depth
+    pygame.K_COMMA,  # decrease depth
+]
 
+def make_mandelbrot():
+    m = mandelbrot.Mandelbrot(
+        canvas, allowed_keyevents=general_keys)
+    m.view.rectify()
+    return m
+
+def make_julia():
+    j = julia.Julia(
+        make_mandelbrot(),
+        canvas, allowed_keyevents=general_keys + [
+            pygame.K_w,      # move julia constant up
+            pygame.K_a,      # move julia constant left
+            pygame.K_s,      # move julia constant down
+            pygame.K_d,      # move julia constant right
+        ])
+    j.view.rectify()
+    return j
+
+def make_fractals(fractal_i=None):
+    global fractals
+    # maybe initialize
+    if len(fractals) != 2:
+        fractals = [None,None]
+        fractal_i = None
+    # make all fractals
+    if fractal_i == None:
+        for i in range(2):
+            make_fractals(fractal_i=i)
+    # make mandelbrot
+    elif fractal_i == 0:
+        fractals[fractal_i] = make_mandelbrot()
+    # make julia
+    elif fractal_i == 1:
+        fractals[fractal_i] = make_julia()
+
+# create fractals
+fractals = []
+make_fractals()
+fractal_i = 0
+
+# event loop
 while True:
-    events = mb.render()
-    # handle events, mainly keys
+    events = fractals[fractal_i].render()
     for e in events:
-
         # quit
         if e.type == pygame.QUIT:
             pygame.quit()
             quit()
-
         # keys
         elif e.type == pygame.KEYDOWN:
 
@@ -49,51 +84,50 @@ while True:
 
             # pause/unpause rendering
             elif e.key == pygame.K_SPACE:
-                mb.toggle_pause()
+                fractals[fractal_i].toggle_pause()
 
-            # julia on/off
-            elif e.key == pygame.K_j:
-                mb.toggle_julia()
+            # cycle fractals
+            elif e.key == pygame.K_f:
+                fractal_i += 1
+                if fractal_i >= len(fractals):
+                    fractal_i = 0
 
             # reset
             elif e.key == pygame.K_r:
-                julia = mb._juliamode
-                mb = mandelbrot.Mandelbrot(canvas)
-                mb._juliamode = julia
-                mb.view.rectify()
+                make_fractals(fractal_i=fractal_i)
 
             # zooming
             elif e.key == pygame.K_PLUS:
-                mb.view.zoom(factor=2)
+                fractals[fractal_i].view.zoom(factor=2)
             elif e.key == pygame.K_MINUS:
-                mb.view.zoom(factor=0.5)
+                fractals[fractal_i].view.zoom(factor=0.5)
 
             # moving around
             elif e.key == pygame.K_UP:
-                mb.view.move(view.Direction.UP)
+                fractals[fractal_i].view.move(view.Direction.UP)
             elif e.key == pygame.K_DOWN:
-                mb.view.move(view.Direction.DOWN)
+                fractals[fractal_i].view.move(view.Direction.DOWN)
             elif e.key == pygame.K_LEFT:
-                mb.view.move(view.Direction.LEFT)
+                fractals[fractal_i].view.move(view.Direction.LEFT)
             elif e.key == pygame.K_RIGHT:
-                mb.view.move(view.Direction.RIGHT)
+                fractals[fractal_i].view.move(view.Direction.RIGHT)
 
             # changing depth
             elif e.key == pygame.K_PERIOD:
                 # Round to ceiling, else e. g. (2 * 1.1) = 2.2 becomes 2 again.
-                mb.set_depth(math.ceil(mb._depth * 1.1))
-                print("Set depth to", mb._depth)
+                fractals[fractal_i].set_depth(math.ceil(fractals[fractal_i]._depth * 1.1))
+                print("Set depth to", fractals[fractal_i]._depth)
             elif e.key == pygame.K_COMMA:
                 # Round to floor, else e. g. (2 / 1.1) 1.818 becomes 2 again.
-                mb.set_depth(math.floor(mb._depth / 1.1))
-                print("Set depth to", mb._depth)
+                fractals[fractal_i].set_depth(math.floor(fractals[fractal_i]._depth / 1.1))
+                print("Set depth to", fractals[fractal_i]._depth)
 
             # moving julia constant
             elif e.key == pygame.K_w:
-                mb.julia_move(view.Direction.UP)
+                fractals[fractal_i].move_constant(view.Direction.UP)
             elif e.key == pygame.K_s:
-                mb.julia_move(view.Direction.DOWN)
+                fractals[fractal_i].move_constant(view.Direction.DOWN)
             elif e.key == pygame.K_a:
-                mb.julia_move(view.Direction.LEFT)
+                fractals[fractal_i].move_constant(view.Direction.LEFT)
             elif e.key == pygame.K_d:
-                mb.julia_move(view.Direction.RIGHT)
+                fractals[fractal_i].move_constant(view.Direction.RIGHT)

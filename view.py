@@ -1,5 +1,4 @@
 from enum import Enum
-import canvas
 
 
 class Direction(Enum):
