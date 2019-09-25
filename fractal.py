@@ -88,6 +88,7 @@ class Fractal():
             if count % update_after == 0:
                 self.view.canvas.update()
 
+        self.view.canvas.update()
         return self.idle()
 
     def idle(self):

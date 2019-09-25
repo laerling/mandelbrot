@@ -90,10 +90,10 @@ class View:
         however, higher Y values are at the top of the window.
 
         """
-        distance_to_left = point[0] - min(self.x)
-        distance_to_top = max(self.y) - point[1]
-        return (distance_to_left / self.size_x() * self.canvas.width,
-                distance_to_top / self.size_y() * self.canvas.height)
+        distance_to_border_left = point[0] - min(self.x)
+        distance_to_border_top = max(self.y) - point[1]
+        return (distance_to_border_left / self.size_x() * self.canvas.width,
+                distance_to_border_top / self.size_y() * self.canvas.height)
 
     def square(self, point, color, size=1):
         "Color a square at POINT with a size of SIZE x SIZE pixel."
