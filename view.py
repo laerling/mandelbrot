@@ -23,7 +23,7 @@ class View:
         "Adjusts view to match canvas proportion."
         view_width = self.size_y() / self.canvas.height * self.canvas.width
         self.x = (self.middle_x() - view_width / 2,
-                  self.middle_y() + view_width / 2)
+                  self.middle_x() + view_width / 2)
 
     def size_x(self):
         "Width and height of view (not canvas!)."
