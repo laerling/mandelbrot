@@ -1,6 +1,7 @@
 #!/usr/bin/env python3.7
 
 import julia
+import logistic_map
 import mandelbox
 import mandelbrot
 
@@ -51,25 +52,32 @@ def make_mandelbox():
     m.view.rectify()
     return m
 
+def make_logistic_map():
+    l = logistic_map.LogisticMap(
+        canvas, allowed_keyevents=general_keys + [
+            pygame.K_c, # toggle color
+        ])
+    # don't rectify view, because there's no symmetry
+    return l
+
 def make_fractals(fractal_i=None):
     global fractals
     # maybe initialize
-    if len(fractals) != 3:
-        fractals = [None, None, None]
+    if len(fractals) != 4:
+        fractals = [None, None, None, None]
         fractal_i = None
     # make all fractals
     if fractal_i == None:
-        for i in range(3):
+        for i in range(4):
             make_fractals(fractal_i=i)
-    # make mandelbrot
     elif fractal_i == 0:
         fractals[fractal_i] = make_mandelbrot()
-    # make julia
     elif fractal_i == 1:
         fractals[fractal_i] = make_julia()
-    # make mandelbox
     elif fractal_i == 2:
         fractals[fractal_i] = make_mandelbox()
+    elif fractal_i == 3:
+        fractals[fractal_i] = make_logistic_map()
 
 # create fractals
 fractals = []
@@ -155,3 +163,7 @@ while True:
             elif e.key == pygame.K_d:
                 fractals[fractal_i].move_constant(view.Direction.RIGHT)
                 fractals[fractal_i].paused = False
+
+            # toggle color
+            elif e.key == pygame.K_c:
+                fractals[fractal_i].color = not fractals[fractal_i].color
