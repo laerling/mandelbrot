@@ -101,43 +101,57 @@ while True:
                 fractal_i += 1
                 if fractal_i >= len(fractals):
                     fractal_i = 0
+                fractals[fractal_i].paused = False
 
             # reset
             elif e.key == pygame.K_r:
                 make_fractals(fractal_i=fractal_i)
+                fractals[fractal_i].paused = False
 
             # zooming
             elif e.key == pygame.K_PLUS:
                 fractals[fractal_i].view.zoom(factor=2)
+                fractals[fractal_i].paused = False
             elif e.key == pygame.K_MINUS:
                 fractals[fractal_i].view.zoom(factor=0.5)
+                fractals[fractal_i].paused = False
 
             # moving around
             elif e.key == pygame.K_UP:
                 fractals[fractal_i].view.move(view.Direction.UP)
+                fractals[fractal_i].paused = False
             elif e.key == pygame.K_DOWN:
                 fractals[fractal_i].view.move(view.Direction.DOWN)
+                fractals[fractal_i].paused = False
             elif e.key == pygame.K_LEFT:
                 fractals[fractal_i].view.move(view.Direction.LEFT)
+                fractals[fractal_i].paused = False
             elif e.key == pygame.K_RIGHT:
                 fractals[fractal_i].view.move(view.Direction.RIGHT)
+                fractals[fractal_i].paused = False
 
             # changing depth
             elif e.key == pygame.K_PERIOD:
                 # Round to ceiling, else e. g. (2 * 1.1) = 2.2 becomes 2 again.
                 fractals[fractal_i].set_depth(math.ceil(fractals[fractal_i]._depth * 1.1))
                 print("Set depth to", fractals[fractal_i]._depth)
+                fractals[fractal_i].paused = False
             elif e.key == pygame.K_COMMA:
                 # Round to floor, else e. g. (2 / 1.1) 1.818 becomes 2 again.
                 fractals[fractal_i].set_depth(math.floor(fractals[fractal_i]._depth / 1.1))
                 print("Set depth to", fractals[fractal_i]._depth)
+                fractals[fractal_i].paused = False
 
             # moving julia constant
             elif e.key == pygame.K_w:
                 fractals[fractal_i].move_constant(view.Direction.UP)
+                fractals[fractal_i].paused = False
             elif e.key == pygame.K_s:
                 fractals[fractal_i].move_constant(view.Direction.DOWN)
+                fractals[fractal_i].paused = False
             elif e.key == pygame.K_a:
                 fractals[fractal_i].move_constant(view.Direction.LEFT)
+                fractals[fractal_i].paused = False
             elif e.key == pygame.K_d:
                 fractals[fractal_i].move_constant(view.Direction.RIGHT)
+                fractals[fractal_i].paused = False
