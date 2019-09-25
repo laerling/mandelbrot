@@ -69,10 +69,33 @@ class View:
         size_x = self.size_x()
         size_y = self.size_y()
         if direction == Direction.UP:
-            self.y = (min(self.y) - size_y * factor, max(self.y) - size_y * factor)
+            self.y = (min(self.y) + size_y * factor,
+                      max(self.y) + size_y * factor)
         elif direction == Direction.DOWN:
-            self.y = (min(self.y) + size_y * factor, max(self.y) + size_y * factor)
+            self.y = (min(self.y) - size_y * factor,
+                      max(self.y) - size_y * factor)
         elif direction == Direction.LEFT:
-            self.x = (min(self.x) - size_x * factor, max(self.x) - size_x * factor)
+            self.x = (min(self.x) - size_x * factor,
+                      max(self.x) - size_x * factor)
         elif direction == Direction.RIGHT:
-            self.x = (min(self.x) + size_x * factor, max(self.x) + size_x * factor)
+            self.x = (min(self.x) + size_x * factor,
+                      max(self.x) + size_x * factor)
+
+    def point_to_pixel(self, point):
+        """Transforms a point within the coordinate system represented by this object into pixel coordinates.
+        
+        Note, that in the coordinate system higher X values are at the
+        right and higher Y values at the top of the window, while in
+        the pixel system, higher X values are also at the right,
+        however, higher Y values are at the top of the window.
+
+        """
+        distance_to_left = point[0] - min(self.x)
+        distance_to_top = max(self.y) - point[1]
+        return (distance_to_left / self.size_x() * self.canvas.width,
+                distance_to_top / self.size_y() * self.canvas.height)
+
+    def square(self, point, color, size=1):
+        "Color a square at POINT with a size of SIZE x SIZE pixel."
+        pos = self.point_to_pixel(point)
+        self.canvas.square(pos, size, color)

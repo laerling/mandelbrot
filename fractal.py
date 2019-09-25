@@ -62,31 +62,32 @@ class Fractal():
             if events != None:
                 return events
 
-            # calculate point
-            pix = (random.randrange(self.view.canvas.width),
-                   random.randrange(self.view.canvas.height))
-            pos = (min(self.view.x) + self.view.size_x() * (pix[0] / self.view.canvas.width),
-                   min(self.view.y) + self.view.size_y() * (pix[1] / self.view.canvas.height))
+            # choose point
+            point = (min(self.view.x) + random.random() * self.view.size_x(),
+                     min(self.view.y) + random.random() * self.view.size_y())
 
-            # calculate color for point
-            colorindex = self.calc_point(pos)
+            # calculate color
+            colorindex = self.calc_point(point)
 
-            # draw to canvas
-            # Update every update_after steps
-            update_after = 1000
-            # refining_speed: Lower values make the picture stay
+            # Lower values for shrinking_speed make the picture stay
             # coarse, higher values make it too long to get
             # finer. Values between 500 and 1000 are good.
-            refining_speed = 750
-            # How much should the squares be shrinked in the beginning?
-            initial_shrink_f = 10
-            self.view.canvas.shrunken_square(
-                pix, min(self.view.canvas.width, self.view.canvas.height),
-                count / refining_speed + initial_shrink_f,
-                color=self._colortable[colorindex]
-            )
+            shrinking_speed = 750
+
+            # square size
+            max_size = min(self.view.canvas.width, self.view.canvas.height)
+            scale = 1 / (count / shrinking_speed + 10)
+            size = scale * max_size
+
+            # draw square
+            self.view.square(point, self._colortable[colorindex],
+                             size=size)
+
+            # Update every update_after steps
+            update_after = 1000
             if count % update_after == 0:
                 self.view.canvas.update()
+
         return self.idle()
 
     def idle(self):

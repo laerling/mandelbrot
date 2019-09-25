@@ -46,9 +46,8 @@ class Canvas():
         "Fill the entire canvas with one color."
         self._sf.fill(color)
 
-    def shrunken_square(self, pos, max_size, shrink_factor=1, color=BLACK):
-        "Color a square at POS of size MAX_SIZE, shrunken about a factor of SHRINK_FACTOR."
-        size = max(max_size / max(shrink_factor, 1), 1)
+    def square(self, pos, size, color=BLACK):
+        "Color a square at POS with a size of SIZE x SIZE pixel."
         pos_from = (pos[0] - size / 2, pos[1] - size / 2)
         pos_to = (pos[0] + size / 2, pos[1] + size / 2)
         self.rectangle(pos_from, pos_to, color=color)
