@@ -1,6 +1,7 @@
 #!/usr/bin/env python3.7
 
 import julia
+import mandelbox
 import mandelbrot
 
 import canvas
@@ -44,15 +45,21 @@ def make_julia():
     j.view.rectify()
     return j
 
+def make_mandelbox():
+    m = mandelbox.Mandelbox(
+        canvas, allowed_keyevents=general_keys)
+    m.view.rectify()
+    return m
+
 def make_fractals(fractal_i=None):
     global fractals
     # maybe initialize
-    if len(fractals) != 2:
-        fractals = [None,None]
+    if len(fractals) != 3:
+        fractals = [None, None, None]
         fractal_i = None
     # make all fractals
     if fractal_i == None:
-        for i in range(2):
+        for i in range(3):
             make_fractals(fractal_i=i)
     # make mandelbrot
     elif fractal_i == 0:
@@ -60,6 +67,9 @@ def make_fractals(fractal_i=None):
     # make julia
     elif fractal_i == 1:
         fractals[fractal_i] = make_julia()
+    # make mandelbox
+    elif fractal_i == 2:
+        fractals[fractal_i] = make_mandelbox()
 
 # create fractals
 fractals = []
