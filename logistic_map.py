@@ -86,10 +86,13 @@ class LogisticMap(fractal.Fractal):
                     # for r > 4, x escapes to -inf
                     if abs(x) > 100:
                         break
-                    row = math.floor((max(self.view.y) - x) /
-                                     self.view.size_y() * self.view.canvas.height)
+                    row = (max(self.view.y) - x) / self.view.size_y() * self.view.canvas.height
                     if row >= 0 and row < len(col):
-                        col[row] += 1
+                        distance_to_floor = row - math.floor(row)
+                        col[math.floor(row)] += 1 - distance_to_floor
+                        if distance_to_floor != 0 and row <= len(col) - 1:
+                            distance_to_ceil = math.ceil(row) - row
+                            col[math.ceil(row)] += 1 - distance_to_ceil
 
                 # draw column
                 max_value = max(1, max(col))
