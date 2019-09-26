@@ -6,16 +6,19 @@ import view
 class LogisticMap(fractal.Fractal):
     "Represents the bifurcation diagram of the logistic map."
 
-    def __init__(self, canvas, depth=1, allowed_keyevents=[],
+    def __init__(self, canvas, depth=None, allowed_keyevents=[],
                  color=False):
         self.paused = False
-        # set parameters
-        self._depth = depth
-        self.color = color
         # make view
         self.view = view.View(canvas, x=(3.5,4.0), y=(0,1))
         self.allowed_keyevents = allowed_keyevents
         self.set_title(rendering=False)
+        # set parameters
+        if depth == None:
+            self._depth = self.view.canvas.height
+        else:
+            self._depth = depth
+        self.color = color
 
     def set_title(self, rendering=False):
         "Sets the window title, indicating if rendering is in process."
@@ -84,7 +87,7 @@ class LogisticMap(fractal.Fractal):
                 # calculate column
                 x = 0.5
                 col = [0] * self.view.canvas.height
-                for d in range(math.ceil(self.view.canvas.height * self._depth)):
+                for d in range(math.ceil(self._depth)):
                     x = r * x * (1 - x)
                     # for r > 4, x escapes to -inf
                     if abs(x) > 100:
