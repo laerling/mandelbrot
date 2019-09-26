@@ -30,6 +30,12 @@ class Fractal():
         algorithm divides by (depth - 1).
 
         """
+        if depth == 0 or depth == self._depth:
+            return
+        if math.floor(depth) == self._depth:
+            depth = math.ceil(depth)
+        else:
+            depth = math.floor(depth)
         self._depth = max(2, depth)
         self.generate_colortable()
 

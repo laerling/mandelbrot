@@ -25,9 +25,12 @@ class LogisticMap(fractal.Fractal):
             self.view.canvas.set_title("Logistic Map")
 
     def set_depth(self, depth):
-        "Set new depth to DEPTH or to 1, if DEPTH is smaller than 1."
-        self._depth = max(1, depth)
-        self.generate_colortable()
+        "Set new depth to abs(DEPTH)."
+        if depth == 0 or depth == self._depth:
+            return
+        self._depth = abs(depth)
+        # the logistic map doesn't have a colortable, because the size
+        # of that table would vary from column to column
 
     def render(self):
         "Render the logistic map"
@@ -81,7 +84,7 @@ class LogisticMap(fractal.Fractal):
                 # calculate column
                 x = 0.5
                 col = [0] * self.view.canvas.height
-                for d in range(self.view.canvas.height * self._depth):
+                for d in range(math.ceil(self.view.canvas.height * self._depth)):
                     x = r * x * (1 - x)
                     # for r > 4, x escapes to -inf
                     if abs(x) > 100:

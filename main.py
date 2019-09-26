@@ -139,13 +139,11 @@ while True:
 
             # changing depth
             elif e.key == pygame.K_PERIOD:
-                # Round to ceiling, else e. g. (2 * 1.1) = 2.2 becomes 2 again.
-                fractals[fractal_i].set_depth(math.ceil(fractals[fractal_i]._depth * 1.1))
+                fractals[fractal_i].set_depth(fractals[fractal_i]._depth * 1.1)
                 print("Set depth to", fractals[fractal_i]._depth)
                 fractals[fractal_i].paused = False
             elif e.key == pygame.K_COMMA:
-                # Round to floor, else e. g. (2 / 1.1) 1.818 becomes 2 again.
-                fractals[fractal_i].set_depth(math.floor(fractals[fractal_i]._depth / 1.1))
+                fractals[fractal_i].set_depth(fractals[fractal_i]._depth / 1.1)
                 print("Set depth to", fractals[fractal_i]._depth)
                 fractals[fractal_i].paused = False
 
