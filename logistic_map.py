@@ -6,7 +6,7 @@ import view
 class LogisticMap(fractal.Fractal):
     "Represents the bifurcation diagram of the logistic map."
 
-    def __init__(self, canvas, depth=10, allowed_keyevents=[],
+    def __init__(self, canvas, depth=1, allowed_keyevents=[],
                  color=False):
         self.paused = False
         # set parameters
@@ -24,6 +24,11 @@ class LogisticMap(fractal.Fractal):
         else:
             self.view.canvas.set_title("Logistic Map")
 
+    def set_depth(self, depth):
+        "Set new depth to DEPTH or to 1, if DEPTH is smaller than 1."
+        self._depth = max(1, depth)
+        self.generate_colortable()
+
     def render(self):
         "Render the logistic map"
 
@@ -34,64 +39,85 @@ class LogisticMap(fractal.Fractal):
         if self.paused:
             return self.idle()
 
-        iterations = self.view.canvas.width * self._depth
-        for col_iter in range(iterations):
+        # calculate maximum bar_width
+        max_bar_width = 1
+        while max_bar_width < self.view.canvas.width:
+            max_bar_width *= 2
 
-            # check for events
-            events = self.get_keyevents()
-            if events != None:
-                return events
+        # decrease bar width over time
+        bar_width = max_bar_width
+        count = 0
+        while bar_width > 1:
+            bar_width /= 2
 
-            # choose column
-            column = random.randrange(self.view.canvas.width)
-            column_width = self.view.size_x() / self.view.canvas.width
-            r = min(self.view.x) + column * column_width
+            # draw bars
+            for col_num in range(int(self.view.canvas.width // bar_width + 1)):
 
-            # calculate column
-            x = 0.5
-            col = [0] * self.view.canvas.height
-            for d in range(self.view.canvas.height * self._depth):
-                x = r * x * (1 - x)
-                # for r > 4, x escapes to -inf
-                if abs(x) > 100:
-                    break
-                row = math.floor((max(self.view.y) - x) /
-                                 self.view.size_y() * self.view.canvas.height)
-                if row >= 0 and row < len(col):
-                    col[row] += 1
+                # check for events
+                events = self.get_keyevents()
+                if events != None:
+                    return events
 
-            # draw column
-            max_value = max(1, max(col))
-            for row in range(len(col)):
+                # choose column
+                column = int(bar_width * col_num)
 
-                # calculate color
-                val = col[row] / max_value
-                if self.color:
-                    color = (
-                        math.floor(max(0, math.sin(1.5 * math.pi * val                 )) * 255), # red
-                        math.floor(max(0, math.sin(1.5 * math.pi * val - 0.25 * math.pi)) * 255), # green
-                        math.floor(max(0, math.sin(1.5 * math.pi * val - 0.5  * math.pi)) * 255), # blue
-                    )
-                else:
-                    color = ((1 - val) * 255,
-                             (1 - val) * 255,
-                             (1 - val) * 255)
+                # skip column if already calculated
+                skip_width = 2 * bar_width
+                skip = False
+                while skip_width < self.view.canvas.width:
+                    if column % skip_width == 0:
+                        skip = True
+                        break
+                    skip_width *= 2
+                if skip:
+                    continue
 
-                # line size
-                max_size = self.view.canvas.width / 10
-                speed = 30
-                size = (abs(col_iter - iterations / 2) / (iterations / 2)) ** speed * (max_size - 0.5) + 0.5
-                #size = max(0.5, (1 - (0.5 / iterations) ** 1.1) * (max_size - 0.5) + 0.5)
+                # calculate column position in view
+                column_width = self.view.size_x() / self.view.canvas.width
+                r = min(self.view.x) + column * column_width
 
-                # draw line
-                self.view.canvas.rectangle(
-                    (math.floor(column-size/2), row),
-                    (math.floor(column+size/2), row+1), color=color)
+                # calculate column
+                x = 0.5
+                col = [0] * self.view.canvas.height
+                for d in range(self.view.canvas.height * self._depth):
+                    x = r * x * (1 - x)
+                    # for r > 4, x escapes to -inf
+                    if abs(x) > 100:
+                        break
+                    row = math.floor((max(self.view.y) - x) /
+                                     self.view.size_y() * self.view.canvas.height)
+                    if row >= 0 and row < len(col):
+                        col[row] += 1
+
+                # draw column
+                max_value = max(1, max(col))
+                for row in range(len(col)):
+
+                    # calculate color
+                    val = col[row] / max_value
+                    if self.color:
+                        color = (
+                            math.floor(max(0, math.sin(1.5 * math.pi * val                 )) * 255), # red
+                            math.floor(max(0, math.sin(1.5 * math.pi * val - 0.25 * math.pi)) * 255), # green
+                            math.floor(max(0, math.sin(1.5 * math.pi * val - 0.5  * math.pi)) * 255), # blue
+                        )
+                    else:
+                        color = ((1 - val) * 255,
+                                 (1 - val) * 255,
+                                 (1 - val) * 255)
+
+                        # draw line
+                        self.view.canvas.rectangle(
+                            (math.floor(column), row),
+                            (math.floor(column+bar_width), row+1), color=color)
 
                 # Update every update_after steps
-                update_after = 2000
-                if (column * self.view.canvas.height + row) % update_after == 0:
+                update_after = 50
+                if count % update_after == 0:
                     self.view.canvas.update()
+                count += 1
 
-        self.view.canvas.update()
+            # update every time the whole canvas has been filled with bars
+            self.view.canvas.update()
+
         return self.idle()
