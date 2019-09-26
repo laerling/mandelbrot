@@ -39,16 +39,18 @@ class LogisticMap(fractal.Fractal):
         if self.paused:
             return self.idle()
 
+        # minimum amount of bars we want to have
+        min_bars = 50
+
         # calculate maximum bar_width
         max_bar_width = 1
-        while max_bar_width < self.view.canvas.width:
+        while min_bars * max_bar_width * 2 < self.view.canvas.width:
             max_bar_width *= 2
 
         # decrease bar width over time
         bar_width = max_bar_width
         count = 0
-        while bar_width > 1:
-            bar_width /= 2
+        while bar_width >= 1:
 
             # draw bars
             for col_num in range(int(self.view.canvas.width // bar_width + 1)):
@@ -64,7 +66,7 @@ class LogisticMap(fractal.Fractal):
                 # skip column if already calculated
                 skip_width = 2 * bar_width
                 skip = False
-                while skip_width < self.view.canvas.width:
+                while skip_width < max_bar_width:
                     if column % skip_width == 0:
                         skip = True
                         break
@@ -119,5 +121,8 @@ class LogisticMap(fractal.Fractal):
 
             # update every time the whole canvas has been filled with bars
             self.view.canvas.update()
+
+            # half bar width and repeat
+            bar_width /= 2
 
         return self.idle()
