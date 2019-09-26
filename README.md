@@ -1,4 +1,4 @@
-# A simple mandelbrot/julia renderer
+# A simple mandelbrot/julia/mandelbox/logistic map renderer
 
 ## Controls
 | action                            | key(s)        |
@@ -15,9 +15,13 @@
 
 ## Example renderings
 
-![Example mandelbrot rendering](./screenshots/mandelbrot.png)
+![Example mandelbrot rendering](./screenshots/mandelbrot/mandelbrot.png)
 
-![Example julia rendering](./screenshots/julia.png)
+![Example julia rendering](./screenshots/julia/julia.png)
+
+![Example mandelbox rendering](./screenshots/mandelbox/mandelbox.png)
+
+![Example logistic map rendering](./screenshots/logisticmap/logisticmap.png)
 
 The color distribution for red, green and blue is as follows:
 
