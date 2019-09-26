@@ -164,3 +164,4 @@ while True:
             # toggle color
             elif e.key == pygame.K_c:
                 fractals[fractal_i].color = not fractals[fractal_i].color
+                fractals[fractal_i].paused = False

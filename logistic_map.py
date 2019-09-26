@@ -117,10 +117,10 @@ class LogisticMap(fractal.Fractal):
                                  (1 - val) * 255,
                                  (1 - val) * 255)
 
-                        # draw line
-                        self.view.canvas.rectangle(
-                            (math.floor(column), row),
-                            (math.floor(column+bar_width), row+1), color=color)
+                    # draw line
+                    self.view.canvas.rectangle(
+                        (math.floor(column), row),
+                        (math.floor(column+bar_width), row+1), color=color)
 
                 # Update every update_after steps
                 update_after = 50
