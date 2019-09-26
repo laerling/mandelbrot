@@ -1,14 +1,13 @@
 import fractal
 import math
+import random
 import view
 
 class LogisticMap(fractal.Fractal):
     "Represents the bifurcation diagram of the logistic map."
 
-    def __init__(self, canvas, depth=None, allowed_keyevents=[],
+    def __init__(self, canvas, depth=10, allowed_keyevents=[],
                  color=False):
-        if depth == None:
-            depth = 10 * canvas.height
         self.paused = False
         # set parameters
         self._depth = depth
@@ -35,31 +34,35 @@ class LogisticMap(fractal.Fractal):
         if self.paused:
             return self.idle()
 
-        for column in range(self.view.canvas.width):
+        iterations = self.view.canvas.width * self._depth
+        for col_iter in range(iterations):
 
             # check for events
             events = self.get_keyevents()
             if events != None:
                 return events
 
-            # calculate x
+            # choose column
+            column = random.randrange(self.view.canvas.width)
             column_width = self.view.size_x() / self.view.canvas.width
             r = min(self.view.x) + column * column_width
 
             # calculate column
             x = 0.5
             col = [0] * self.view.canvas.height
-            for d in range(self._depth):
+            for d in range(self.view.canvas.height * self._depth):
                 x = r * x * (1 - x)
-                row = math.floor((max(self.view.y) - x) / self.view.size_y() * self.view.canvas.height)
+                row = math.floor((max(self.view.y) - x) /
+                                 self.view.size_y() * self.view.canvas.height)
                 if row >= 0 and row < len(col):
                     col[row] += 1
 
-            # calculate color
+            # draw column
             max_value = max(col)
             for row in range(len(col)):
-                val = col[row] / max_value
 
+                # calculate color
+                val = col[row] / max_value
                 if self.color:
                     color = (
                         math.floor(max(0, math.sin(1.5 * math.pi * val                 )) * 255), # red
@@ -71,8 +74,16 @@ class LogisticMap(fractal.Fractal):
                              (1 - val) * 255,
                              (1 - val) * 255)
 
-                # draw pixel
-                self.view.canvas.pixel((column, row), color=color)
+                # line size
+                max_size = self.view.canvas.width / 10
+                speed = 30
+                size = (abs(col_iter - iterations / 2) / (iterations / 2)) ** speed * (max_size - 0.5) + 0.5
+                #size = max(0.5, (1 - (0.5 / iterations) ** 1.1) * (max_size - 0.5) + 0.5)
+
+                # draw line
+                self.view.canvas.rectangle(
+                    (math.floor(column-size/2), row),
+                    (math.floor(column+size/2), row+1), color=color)
 
                 # Update every update_after steps
                 update_after = 1000
