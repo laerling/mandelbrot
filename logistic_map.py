@@ -52,13 +52,16 @@ class LogisticMap(fractal.Fractal):
             col = [0] * self.view.canvas.height
             for d in range(self.view.canvas.height * self._depth):
                 x = r * x * (1 - x)
+                # for r > 4, x escapes to -inf
+                if abs(x) > 100:
+                    break
                 row = math.floor((max(self.view.y) - x) /
                                  self.view.size_y() * self.view.canvas.height)
                 if row >= 0 and row < len(col):
                     col[row] += 1
 
             # draw column
-            max_value = max(col)
+            max_value = max(1, max(col))
             for row in range(len(col)):
 
                 # calculate color
@@ -86,7 +89,7 @@ class LogisticMap(fractal.Fractal):
                     (math.floor(column+size/2), row+1), color=color)
 
                 # Update every update_after steps
-                update_after = 1000
+                update_after = 2000
                 if (column * self.view.canvas.height + row) % update_after == 0:
                     self.view.canvas.update()
 
