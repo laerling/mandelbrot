@@ -1,9 +1,10 @@
-#!/usr/bin/env python3.7
+#!/usr/bin/env python3
 
 import julia
 import logistic_map
 import mandelbox
 import mandelbrot
+import sierpinski
 
 import canvas
 import math
@@ -59,15 +60,21 @@ def make_logistic_map():
     # don't rectify view, because there's no symmetry
     return l
 
+def make_sierpinski():
+    s = sierpinski.Sierpinski(
+        canvas, allowed_keyevents=general_keys)
+    s.view.rectify()
+    return s
+
 def make_fractals(fractal_i=None):
     global fractals
     # maybe initialize
-    if len(fractals) != 4:
-        fractals = [None, None, None, None]
+    if len(fractals) != 5:
+        fractals = [None, None, None, None, None]
         fractal_i = None
     # make all fractals
     if fractal_i == None:
-        for i in range(4):
+        for i in range(5):
             make_fractals(fractal_i=i)
     elif fractal_i == 0:
         fractals[fractal_i] = make_mandelbrot()
@@ -77,6 +84,8 @@ def make_fractals(fractal_i=None):
         fractals[fractal_i] = make_mandelbox()
     elif fractal_i == 3:
         fractals[fractal_i] = make_logistic_map()
+    elif fractal_i == 4:
+        fractals[fractal_i] = make_sierpinski()
 
 # create fractals
 fractals = []
